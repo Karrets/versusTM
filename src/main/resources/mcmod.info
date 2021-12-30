@@ -1,0 +1,18 @@
+[
+  {
+    "modid": "versustm",
+    "name": "VersusTM",
+    "description": "A small mod to keep things fair in survival SMPs and more!",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "",
+    "updateUrl": "",
+    "authorList": [
+      "Kodirex"
+    ],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
+]
