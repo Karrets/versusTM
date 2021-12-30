@@ -1,16 +1,10 @@
 package space.kodirex.versustm;
 
-import akka.actor.Cell;
-import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.common.config.Config;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import space.kodirex.versustm.Command.Configure;
 
 @Mod(
         modid = VersusTM.MOD_ID,
@@ -38,6 +32,5 @@ public class VersusTM {
         SERVER = event.getServer();
 
         MinecraftForge.EVENT_BUS.register(Timer.class);
-        event.registerServerCommand(new Configure());
     }
 }

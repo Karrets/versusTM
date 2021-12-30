@@ -13,7 +13,6 @@ public class Timer {
             uncountedTicks += 1;
 
             if(uncountedTicks % 20 == 0) {
-                VersusTM.SERVER.sendMessage(new TextComponentString("A second has passed!"));
             }
         }
     }
