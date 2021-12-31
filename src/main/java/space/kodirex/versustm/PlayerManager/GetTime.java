@@ -1,8 +1,12 @@
 package space.kodirex.versustm.PlayerManager;
 
+import com.mojang.authlib.GameProfile;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
@@ -11,6 +15,8 @@ import space.kodirex.versustm.ModConfig;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
+
+import static net.minecraft.command.CommandBase.getListOfStringsMatchingLastWord;
 
 public class GetTime implements ICommand {
     @Override
@@ -30,16 +36,29 @@ public class GetTime implements ICommand {
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
-        if(sender.getCommandSenderEntity() != null) {
-            IPlayerTimer timer = sender.getCommandSenderEntity().getCapability(TimerProvider.TIMER_CAPABILITY, null);
+        Entity player = sender.getCommandSenderEntity();
+
+        if(args.length > 0) {
+
+            for(EntityPlayerMP possiblePlayer : server.getPlayerList().getPlayers()) {
+                if(possiblePlayer.getName().equals(args[0])) {
+                    player = possiblePlayer;
+                }
+            }
+        }
+
+        if(player != null & player instanceof EntityPlayer) {
+            IPlayerTimer timer = PlayerTimer.get((EntityPlayer) player);
 
             if(timer != null) {
                 String message = "You have ";
-                message += Double.toString(timer.getTimeSpentAsMinutes());
-                message += " minutes remaining...";
+                message += timer.getTimeRemainingAsHumanReadable();
+                message += " remaining...";
 
-                sender.sendMessage(new TextComponentString(message));
+                player.sendMessage(new TextComponentString(message));
             }
+        } else {
+            sender.sendMessage(new TextComponentString("Target of command must be a player!"));
         }
     }
 
@@ -50,7 +69,7 @@ public class GetTime implements ICommand {
 
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
-        return Collections.emptyList();
+        return args.length >= 1 ? getListOfStringsMatchingLastWord(args, server.getOnlinePlayerNames()) : Collections.emptyList();
     }
 
     @Override

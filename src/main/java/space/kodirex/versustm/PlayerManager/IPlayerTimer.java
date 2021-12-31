@@ -10,7 +10,10 @@ public interface IPlayerTimer {
     void setTimeSpent(double completionPercent);
     int[] getLastRefresh();
     double getTimeSpent();
-    double getTimeSpentAsMinutes();
+    double getTimeRemainingAsHours();
+    double getTimeRemainingAsMinutes();
+    double getTimeRemainingAsSeconds();
+    String getTimeRemainingAsHumanReadable();
     void progress();
     void reset();
     boolean isPlayable();

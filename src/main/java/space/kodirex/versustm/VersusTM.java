@@ -1,5 +1,7 @@
 package space.kodirex.versustm;
 
+import net.minecraft.command.ICommand;
+import net.minecraft.command.server.CommandBanPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -43,7 +45,7 @@ public class VersusTM {
     public void serverStart(FMLServerStartingEvent event) {
         SERVER = event.getServer();
         serverLive = true;
-        
+
         event.registerServerCommand(new GetTime());
     }
 }

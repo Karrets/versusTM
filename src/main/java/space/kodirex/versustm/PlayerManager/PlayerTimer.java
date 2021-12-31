@@ -32,8 +32,30 @@ public class PlayerTimer implements IPlayerTimer {
     }
 
     @Override
-    public double getTimeSpentAsMinutes() {
+    public double getTimeRemainingAsHours() {
+        return ((1 - timeSpent) * ModConfig.timeLimit);
+    }
+
+    @Override
+    public double getTimeRemainingAsMinutes() { //Returns as minutes...
         return ((1 - timeSpent) * ModConfig.timeLimit) * 60;
+    }
+
+    @Override
+    public double getTimeRemainingAsSeconds() {
+        return ((1 - timeSpent) * ModConfig.timeLimit) * 3600;
+    }
+
+    @Override
+    public String getTimeRemainingAsHumanReadable() { //Returns as string formatted for people to read
+                                                      //EX: "1 hour, 32 minutes, and 8 seconds"
+        int totalSecs = (int) getTimeRemainingAsSeconds();
+
+        int hours = totalSecs / 3600;
+        int minutes = (totalSecs % 3600) / 60;
+        int seconds = totalSecs % 60;
+
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 
     @Override

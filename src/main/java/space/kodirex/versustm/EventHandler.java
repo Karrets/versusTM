@@ -36,8 +36,17 @@ public class EventHandler {
 
     public static void SecondEvent(TickEvent.ServerTickEvent event) { //Fires every second!
         for (EntityPlayerMP player : VersusTM.SERVER.getPlayerList().getPlayers()) {
-            IPlayerTimer timer = player.getCapability(TimerProvider.TIMER_CAPABILITY, null);
+            IPlayerTimer timer = PlayerTimer.get(player);
+
             if (timer != null) {
+                double secondsRemaining = timer.getTimeRemainingAsMinutes() * 60;
+                if(secondsRemaining <= 30) {
+                    String message = "§cWarning, you have ";
+                    message += Integer.toString((int)secondsRemaining);
+                    message += " seconds left!";
+                    player.sendMessage(new TextComponentString(message));
+                }
+
                 timer.progress();
 
                 if (!timer.isPlayable()) {
@@ -50,9 +59,16 @@ public class EventHandler {
 
     public static void MinuteEvent(TickEvent.ServerTickEvent event) { //Fires every minute!
         for (EntityPlayerMP player : VersusTM.SERVER.getPlayerList().getPlayers()) {
-            IPlayerTimer timer = player.getCapability(TimerProvider.TIMER_CAPABILITY, null);
-            if (timer != null) {
+            IPlayerTimer timer = PlayerTimer.get(player);
 
+            if (timer != null) {
+                int remaining = (int)timer.getTimeRemainingAsMinutes();
+                if(remaining <= 10 & remaining != 0) {
+                    String message = "§eWarning, you have ";
+                    message += Integer.toString((int)remaining);
+                    message += " minutes left!";
+                    player.sendMessage(new TextComponentString(message));
+                }
             }
         }
     }
