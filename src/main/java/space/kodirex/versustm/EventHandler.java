@@ -20,14 +20,14 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void tickEvent(TickEvent.ServerTickEvent event) {
-        if(event.phase == TickEvent.Phase.START) {
+        if (event.phase == TickEvent.Phase.START) {
             uncountedTicks += 1;
 
-            if(uncountedTicks % 20 == 0) {
+            if (uncountedTicks % 20 == 0) {
                 SecondEvent(event);
             }
 
-            if(uncountedTicks >= 1200) {
+            if (uncountedTicks >= 1200) {
                 MinuteEvent(event);
                 uncountedTicks = 0; //Reset tick counter after we reach one minute.
             }
@@ -35,12 +35,12 @@ public class EventHandler {
     }
 
     public static void SecondEvent(TickEvent.ServerTickEvent event) { //Fires every second!
-        for(EntityPlayerMP player : VersusTM.SERVER.getPlayerList().getPlayers()) {
+        for (EntityPlayerMP player : VersusTM.SERVER.getPlayerList().getPlayers()) {
             IPlayerTimer timer = player.getCapability(TimerProvider.TIMER_CAPABILITY, null);
-            if(timer != null) {
+            if (timer != null) {
                 timer.progress();
 
-                if(!timer.isPlayable()) {
+                if (!timer.isPlayable()) {
                     player.connection.disconnect(
                             new TextComponentString("You are out of time! Come back tomorrow!"));
                 }
@@ -49,9 +49,9 @@ public class EventHandler {
     }
 
     public static void MinuteEvent(TickEvent.ServerTickEvent event) { //Fires every minute!
-        for(EntityPlayerMP player : VersusTM.SERVER.getPlayerList().getPlayers()) {
+        for (EntityPlayerMP player : VersusTM.SERVER.getPlayerList().getPlayers()) {
             IPlayerTimer timer = player.getCapability(TimerProvider.TIMER_CAPABILITY, null);
-            if(timer != null) {
+            if (timer != null) {
 
             }
         }
@@ -59,7 +59,7 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void attachCapability(AttachCapabilitiesEvent<Entity> event) {
-        if(event.getObject() instanceof EntityPlayer) {
+        if (event.getObject() instanceof EntityPlayer) {
             event.addCapability(TIMER_CAPABILITY, new TimerProvider());
         }
     }
@@ -70,8 +70,8 @@ public class EventHandler {
 
         IPlayerTimer timer = PlayerTimer.get(player);
 
-        if(timer != null) {
-            if(!timer.isPlayable()) {
+        if (timer != null) {
+            if (!timer.isPlayable()) {
                 player.connection.disconnect(
                         new TextComponentString("You are out of time! Come back tomorrow!"));
             }

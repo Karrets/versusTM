@@ -12,7 +12,7 @@ import javax.annotation.Nullable;
 public class TimerProvider implements ICapabilitySerializable<NBTBase> {
     @CapabilityInject(IPlayerTimer.class)
     public static Capability<IPlayerTimer> TIMER_CAPABILITY = null;
-    private IPlayerTimer instance = TIMER_CAPABILITY.getDefaultInstance();
+    private final IPlayerTimer instance = TIMER_CAPABILITY.getDefaultInstance();
 
     @Override
     public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
@@ -22,7 +22,7 @@ public class TimerProvider implements ICapabilitySerializable<NBTBase> {
     @Nullable
     @Override
     public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-        return capability == TIMER_CAPABILITY ? TIMER_CAPABILITY.<T> cast(this.instance) : null;
+        return capability == TIMER_CAPABILITY ? TIMER_CAPABILITY.cast(this.instance) : null;
     }
 
     @Override
