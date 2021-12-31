@@ -2,9 +2,15 @@ package space.kodirex.versustm;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.config.Config;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.Mod;
+import space.kodirex.versustm.PlayerManager.IPlayerTimer;
+import space.kodirex.versustm.PlayerManager.PlayerTimer;
+import space.kodirex.versustm.PlayerManager.PlayerTimerStorage;
 
 @Mod(
         modid = VersusTM.MOD_ID,
@@ -28,9 +34,13 @@ public class VersusTM {
     public static VersusTM INSTANCE;
 
     @Mod.EventHandler
-    public void init(FMLServerStartingEvent event) {
-        SERVER = event.getServer();
+    public void init(FMLInitializationEvent event) {
+        CapabilityManager.INSTANCE.register(IPlayerTimer.class, new PlayerTimerStorage(), PlayerTimer::new);
+    }
 
+    @Mod.EventHandler
+    public void serverStart(FMLServerStartingEvent event) {
+        SERVER = event.getServer();
         MinecraftForge.EVENT_BUS.register(Timer.class);
     }
 }
