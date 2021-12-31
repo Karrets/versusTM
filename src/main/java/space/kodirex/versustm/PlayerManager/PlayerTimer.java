@@ -50,6 +50,6 @@ public class PlayerTimer implements IPlayerTimer {
             return true;
         }
 
-        return timeSpent >= 1;
+        return (timeSpent <= 1);
     }
 }
