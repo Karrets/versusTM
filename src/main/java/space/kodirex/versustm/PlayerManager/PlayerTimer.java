@@ -1,5 +1,6 @@
 package space.kodirex.versustm.PlayerManager;
 
+import net.minecraft.entity.player.EntityPlayer;
 import space.kodirex.versustm.ModConfig;
 
 import java.time.LocalDate;
@@ -31,8 +32,13 @@ public class PlayerTimer implements IPlayerTimer {
     }
 
     @Override
+    public double getTimeSpentAsMinutes() {
+        return ((1 - timeSpent) * ModConfig.timeLimit) * 60;
+    }
+
+    @Override
     public void progress() { //This should be called once a minute for every active player!
-        double increment = 1 / (ModConfig.timeLimit * 60);
+        double increment = 1 / (ModConfig.timeLimit * 3600);
         timeSpent += increment;
     }
 
@@ -51,5 +57,16 @@ public class PlayerTimer implements IPlayerTimer {
         }
 
         return (timeSpent <= 1);
+    }
+
+    public static IPlayerTimer get(EntityPlayer player) {
+        return player.getCapability(TimerProvider.TIMER_CAPABILITY, null);
+    }
+
+    public static void copy(IPlayerTimer oldTimer, EntityPlayer player) {
+        IPlayerTimer newTimer = get(player);
+
+        newTimer.setTimeSpent(oldTimer.getTimeSpent());
+        newTimer.setLastRefresh(oldTimer.getLastRefresh());
     }
 }

@@ -1,6 +1,6 @@
 package space.kodirex.versustm.PlayerManager;
 
-import net.minecraft.command.CommandException;
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -9,7 +9,6 @@ import net.minecraft.util.text.TextComponentString;
 import space.kodirex.versustm.ModConfig;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -36,9 +35,7 @@ public class GetTime implements ICommand {
 
             if(timer != null) {
                 String message = "You have ";
-                double remaining = ((1 - timer.getTimeSpent()) * ModConfig.timeLimit) * 60;
-
-                message += Double.toString(remaining);
+                message += Double.toString(timer.getTimeSpentAsMinutes());
                 message += " minutes remaining...";
 
                 sender.sendMessage(new TextComponentString(message));
@@ -58,7 +55,7 @@ public class GetTime implements ICommand {
 
     @Override
     public boolean isUsernameIndex(String[] args, int index) {
-        return false;
+        return true;
     }
 
     @Override
