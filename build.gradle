@@ -12,7 +12,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle'
 
 group = 'space.kodirex.versusTM'
-version = 'indev'
+version = '1.0'
 
 java {
     archivesBaseName = 'versusTM'

@@ -1,9 +1,14 @@
 package space.kodirex.versustm.PlayerManager;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import space.kodirex.versustm.ModConfig;
+import space.kodirex.versustm.VersusTM;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class PlayerTimer implements IPlayerTimer {
     private LocalDate lastRefresh = LocalDate.now();
@@ -60,6 +65,62 @@ public class PlayerTimer implements IPlayerTimer {
 
     @Override
     public void progress() { //This should be called once a minute for every active player!
+        switch(ModConfig.mode) {
+//            case "multiplier": //Redundant, but here for clarity!
+//                multiplierProgress();
+//                break;
+            case "all-or-nothing":
+                allOrNothingProgress();
+                break;
+            case "basic":
+                basicProgress();
+                break;
+            default:
+                multiplierProgress();
+                break;
+        }
+    }
+
+    private void multiplierProgress() {
+        List<EntityPlayerMP> allPlayers = VersusTM.SERVER.getPlayerList().getPlayers();
+        List<EntityPlayerMP> onlineEnforcedPlayers = new ArrayList<>();
+        String[] enforcedPlayers = ModConfig.getEnforcedUsers();
+
+        for(EntityPlayerMP online : allPlayers) {
+            for(String enforcedUN : enforcedPlayers) {
+                if(online.getName().equals(enforcedUN)) {
+                    onlineEnforcedPlayers.add(online);
+                }
+            }
+        }
+
+        double multiplier = 1 - (((double) onlineEnforcedPlayers.size()) / enforcedPlayers.length);
+
+
+        double increment = 1 / (ModConfig.timeLimit * 3600);
+        timeSpent += (increment * multiplier);
+    }
+
+    private void allOrNothingProgress() {
+        List<EntityPlayerMP> allPlayers = VersusTM.SERVER.getPlayerList().getPlayers();
+        List<EntityPlayerMP> onlineEnforcedPlayers = new ArrayList<>();
+        String[] enforcedPlayers = ModConfig.getEnforcedUsers();
+
+        for(EntityPlayerMP online : allPlayers) {
+            for(String enforcedUN : enforcedPlayers) {
+                if(online.getName().toUpperCase().equals(enforcedUN.toUpperCase())) { //Case in-sensitive operation.
+                    //TODO: Impl a method of using uuids instead of player names
+                    onlineEnforcedPlayers.add(online);
+                }
+            }
+        }
+
+        if(!(onlineEnforcedPlayers.size() == enforcedPlayers.length)) {
+            basicProgress();
+        } //Dont progress unless someone if offline!
+    }
+
+    private void basicProgress() {
         double increment = 1 / (ModConfig.timeLimit * 3600);
         timeSpent += increment;
     }
