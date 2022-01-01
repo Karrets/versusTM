@@ -7,6 +7,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -20,16 +21,20 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void tickEvent(TickEvent.ServerTickEvent event) {
-        if (event.phase == TickEvent.Phase.START) {
-            uncountedTicks += 1;
+        if(VersusTM.SERVER.getPlayerList().getPlayers().size() != 0) {
+            //Don't bother counting ticks when no-one is online,
+            //The calculations aren't that intense, but over time it adds up.
+            if (event.phase == TickEvent.Phase.START) {
+                uncountedTicks += 1;
 
-            if (uncountedTicks % 20 == 0) {
-                SecondEvent(event);
-            }
+                if (uncountedTicks % 20 == 0) {
+                    SecondEvent(event);
+                }
 
-            if (uncountedTicks >= 1200) {
-                MinuteEvent(event);
-                uncountedTicks = 0; //Reset tick counter after we reach one minute.
+                if (uncountedTicks >= 1200) {
+                    MinuteEvent(event);
+                    uncountedTicks = 0; //Reset tick counter after we reach one minute.
+                }
             }
         }
     }
@@ -65,7 +70,7 @@ public class EventHandler {
                 int remaining = (int)timer.getTimeRemainingAsMinutes();
                 if(remaining <= 10 & remaining != 0) {
                     String message = "§eWarning, you have ";
-                    message += Integer.toString((int)remaining);
+                    message += Integer.toString(remaining);
                     message += " minutes left!";
                     player.sendMessage(new TextComponentString(message));
                 }
@@ -75,7 +80,7 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void attachCapability(AttachCapabilitiesEvent<Entity> event) {
-        if (event.getObject() instanceof EntityPlayer) {
+        if (event.getObject() instanceof EntityPlayerMP) {
             event.addCapability(TIMER_CAPABILITY, new TimerProvider());
         }
     }

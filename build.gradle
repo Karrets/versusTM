@@ -12,7 +12,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle'
 
 group = 'space.kodirex.versusTM'
-version = '1.0'
+version = '1.1'
 
 java {
     archivesBaseName = 'versusTM'
@@ -122,7 +122,7 @@ jar {
         attributes([
                 "Specification-Title"     : "versustm",
                 "Specification-Vendor"    : "Kodirex",
-                "Specification-Version"   : "1", // We are version 1 of ourselves
+                "Specification-Version"   : this.version, // We are version 1 of ourselves
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : project.jar.archiveVersion,
                 "Implementation-Vendor"   : "Kodirex",

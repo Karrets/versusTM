@@ -5,6 +5,12 @@ import net.minecraftforge.common.config.Config;
 @Config(modid = "versustm", category = "general")
 public class ModConfig {
     @Config.Comment({
+            "Enable using uuids for player identification, more secure and doesn't allow players to change their name",
+            "to reset their time..."
+    })
+    public static boolean uuid = false;
+
+    @Config.Comment({
             "A comma seperated list of users that the mod versus time manager mod should handle."
     })
     public static String enforcedUsers = "";

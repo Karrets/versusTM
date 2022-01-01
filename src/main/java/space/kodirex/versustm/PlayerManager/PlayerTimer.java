@@ -52,8 +52,7 @@ public class PlayerTimer implements IPlayerTimer {
     }
 
     @Override
-    public String getTimeRemainingAsHumanReadable() { //Returns as string formatted for people to read
-                                                      //EX: "1 hour, 32 minutes, and 8 seconds"
+    public String getTimeRemainingAsHumanReadable() { //Returns as string formatted for people to read, EX: "01:32:08"
         int totalSecs = (int) getTimeRemainingAsSeconds();
 
         int hours = totalSecs / 3600;
@@ -82,19 +81,11 @@ public class PlayerTimer implements IPlayerTimer {
     }
 
     private void multiplierProgress() {
-        List<EntityPlayerMP> allPlayers = VersusTM.SERVER.getPlayerList().getPlayers();
-        List<EntityPlayerMP> onlineEnforcedPlayers = new ArrayList<>();
+        List<EntityPlayerMP> onlineEnforcedPlayers = getOnlineEnforced();
         String[] enforcedPlayers = ModConfig.getEnforcedUsers();
 
-        for(EntityPlayerMP online : allPlayers) {
-            for(String enforcedUN : enforcedPlayers) {
-                if(online.getName().equals(enforcedUN)) {
-                    onlineEnforcedPlayers.add(online);
-                }
-            }
-        }
 
-        double multiplier = 1 - (((double) onlineEnforcedPlayers.size()) / enforcedPlayers.length);
+        double multiplier = 1 - ((((double) onlineEnforcedPlayers.size()) - 1) / (enforcedPlayers.length - 1));
 
 
         double increment = 1 / (ModConfig.timeLimit * 3600);
@@ -102,18 +93,8 @@ public class PlayerTimer implements IPlayerTimer {
     }
 
     private void allOrNothingProgress() {
-        List<EntityPlayerMP> allPlayers = VersusTM.SERVER.getPlayerList().getPlayers();
-        List<EntityPlayerMP> onlineEnforcedPlayers = new ArrayList<>();
+        List<EntityPlayerMP> onlineEnforcedPlayers = getOnlineEnforced();
         String[] enforcedPlayers = ModConfig.getEnforcedUsers();
-
-        for(EntityPlayerMP online : allPlayers) {
-            for(String enforcedUN : enforcedPlayers) {
-                if(online.getName().toUpperCase().equals(enforcedUN.toUpperCase())) { //Case in-sensitive operation.
-                    //TODO: Impl a method of using uuids instead of player names
-                    onlineEnforcedPlayers.add(online);
-                }
-            }
-        }
 
         if(!(onlineEnforcedPlayers.size() == enforcedPlayers.length)) {
             basicProgress();
@@ -123,6 +104,32 @@ public class PlayerTimer implements IPlayerTimer {
     private void basicProgress() {
         double increment = 1 / (ModConfig.timeLimit * 3600);
         timeSpent += increment;
+    }
+
+    private List<EntityPlayerMP> getOnlineEnforced() {
+        List<EntityPlayerMP> allPlayers = VersusTM.SERVER.getPlayerList().getPlayers();
+        List<EntityPlayerMP> onlineEnforcedPlayers = new ArrayList<>();
+        String[] enforcedPlayers = ModConfig.getEnforcedUsers();
+
+        if(ModConfig.uuid) {
+            for(EntityPlayerMP online : allPlayers) {
+                for (String uuid : enforcedPlayers) {
+                    if (online.getUniqueID().toString().equals(uuid)) {
+                        onlineEnforcedPlayers.add(online);
+                    }
+                }
+            }
+        } else {
+            for(EntityPlayerMP online : allPlayers) {
+                for (String username : enforcedPlayers) {
+                    if (online.getName().toUpperCase().equals(username.toUpperCase())) {
+                        onlineEnforcedPlayers.add(online);
+                    }
+                }
+            }
+        }
+
+        return onlineEnforcedPlayers;
     }
 
     @Override

@@ -10,7 +10,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
-import space.kodirex.versustm.ModConfig;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -26,12 +25,12 @@ public class GetTime implements ICommand {
 
     @Override
     public String getUsage(ICommandSender sender) {
-        return "View your remaining time!";
+        return "View your remaining time! /timebal <username> or /timebal";
     }
 
     @Override
     public List<String> getAliases() {
-        return Collections.emptyList();
+        return Collections.singletonList("TIMEBAL");
     }
 
     @Override
